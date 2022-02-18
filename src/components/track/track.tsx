@@ -9,6 +9,7 @@ import {
   point,
   gridElements,
 } from "../../utils/utils";
+import { useKeyPress } from "../../hooks/useKeyPress";
 import { Car } from "../car";
 import { Rock } from "../rock";
 import "./track.css";
@@ -45,10 +46,10 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
           newCarPosition.x = newCarPosition.x + 1;
           break;
         case "left":
-          newCarPosition.y = newCarPosition.y + 1;
+          newCarPosition.y = newCarPosition.y - 1;
           break;
         case "right":
-          newCarPosition.y = newCarPosition.y - 1;
+          newCarPosition.y = newCarPosition.y + 1;
           break;
         default:
           break;
@@ -72,12 +73,15 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
   return {
     carDirection,
     isCarPosition,
+    moveCar,
   };
 };
 
-const Track = memo(({ carStartPlace }: TrackProps) => {
-  const { isCarPosition, carDirection } = useTrack(carStartPlace);
+const directions = ["up", "down", "left", "right"];
 
+const Track = memo(({ carStartPlace }: TrackProps) => {
+  const { isCarPosition, carDirection, moveCar } = useTrack(carStartPlace);
+  useKeyPress(directions, moveCar);
   return (
     <div className="track-grid">
       {[
