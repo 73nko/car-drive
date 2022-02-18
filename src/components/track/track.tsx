@@ -18,6 +18,7 @@ interface TrackProps {
 }
 
 const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
+  const [carDirection, setCarDirection] = useState<direction>("right");
   const [carPosition, setCarPosition] = useState<point>(
     initializeCarPosition(carStartPlace, obstacles)
   );
@@ -38,16 +39,16 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
       const newCarPosition = { x: carPosition.x, y: carPosition.y };
       switch (direction) {
         case "up":
-          newCarPosition.y = newCarPosition.y - 1;
-          break;
-        case "down":
-          newCarPosition.y = newCarPosition.y + 1;
-          break;
-        case "left":
           newCarPosition.x = newCarPosition.x - 1;
           break;
-        case "right":
+        case "down":
           newCarPosition.x = newCarPosition.x + 1;
+          break;
+        case "left":
+          newCarPosition.y = newCarPosition.y + 1;
+          break;
+        case "right":
+          newCarPosition.y = newCarPosition.y - 1;
           break;
         default:
           break;
@@ -56,6 +57,7 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
         ? { ...newCarPosition, x: newCarPosition.x + 1 }
         : newCarPosition;
     });
+    setCarDirection(direction);
   }, []);
 
   const isCarPosition = useCallback(
@@ -68,20 +70,24 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
   );
 
   return {
-    carPosition,
-    moveCar,
+    carDirection,
     isCarPosition,
   };
 };
 
 const Track = memo(({ carStartPlace }: TrackProps) => {
-  const { isCarPosition } = useTrack(carStartPlace);
+  const { isCarPosition, carDirection } = useTrack(carStartPlace);
 
   return (
     <div className="track-grid">
       {[
         gridElements.map((x) => (
-          <TrackRow key={x} x={x} isCarPosition={isCarPosition} />
+          <TrackRow
+            key={x}
+            x={x}
+            isCarPosition={isCarPosition}
+            carDirection={carDirection}
+          />
         )),
       ]}
     </div>
@@ -90,6 +96,7 @@ const Track = memo(({ carStartPlace }: TrackProps) => {
 
 interface TrackRowProps {
   x: number;
+  carDirection: direction;
   isCarPosition: (point: point) => boolean;
 }
 
@@ -104,14 +111,19 @@ const TrackRow = memo((props: TrackRowProps) => (
 interface TrackCellProps {
   y: number;
   x: number;
+  carDirection: direction;
   isCarPosition: (point: point) => boolean;
 }
 
-const TrackCell = memo(({ x, y, isCarPosition }: TrackCellProps) => (
-  <div key={y} className="track-cell">
-    {hasRock(obstacles, { x, y }) ? <Rock /> : null}
-    {isCarPosition({ x, y }) ? <Car color="red" /> : null}
-  </div>
-));
+const TrackCell = memo(
+  ({ x, y, carDirection, isCarPosition }: TrackCellProps) => (
+    <div key={y} className="track-cell">
+      {hasRock(obstacles, { x, y }) ? <Rock /> : null}
+      {isCarPosition({ x, y }) ? (
+        <Car color="red" direction={carDirection} />
+      ) : null}
+    </div>
+  )
+);
 
 export { Track };

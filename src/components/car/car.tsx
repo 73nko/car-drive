@@ -24,7 +24,7 @@ export function Car(props: CarProps) {
       xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 960 476"
       style={{
-        transition: "transform 0.5s",
+        transition: "transform 0.2s",
         transform: `${positionStyle[direction || DEFAULT_DIRECTION]}`,
       }}>
       <defs>
