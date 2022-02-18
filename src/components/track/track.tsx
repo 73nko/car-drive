@@ -2,8 +2,8 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   carIsOnTrack,
   direction,
-  generateMovements,
-  generateObstacles,
+  movements,
+  obstacles,
   hasRock,
   initializeCarPosition,
   point,
@@ -18,9 +18,6 @@ interface TrackProps {
 }
 
 const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
-  const obstacles = useMemo(generateObstacles, []);
-  const movements = useMemo(generateMovements, []);
-
   const [carPosition, setCarPosition] = useState<point>(
     initializeCarPosition(carStartPlace, obstacles)
   );
@@ -73,24 +70,18 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
   return {
     carPosition,
     moveCar,
-    obstacles,
     isCarPosition,
   };
 };
 
 const Track = memo(({ carStartPlace }: TrackProps) => {
-  const { obstacles, isCarPosition } = useTrack(carStartPlace);
+  const { isCarPosition } = useTrack(carStartPlace);
 
   return (
     <div className="track-grid">
       {[
         gridElements.map((x) => (
-          <TrackRow
-            key={x}
-            x={x}
-            isCarPosition={isCarPosition}
-            obstacles={obstacles}
-          />
+          <TrackRow key={x} x={x} isCarPosition={isCarPosition} />
         )),
       ]}
     </div>
@@ -99,7 +90,6 @@ const Track = memo(({ carStartPlace }: TrackProps) => {
 
 interface TrackRowProps {
   x: number;
-  obstacles: point[];
   isCarPosition: (point: point) => boolean;
 }
 
@@ -114,11 +104,10 @@ const TrackRow = memo((props: TrackRowProps) => (
 interface TrackCellProps {
   y: number;
   x: number;
-  obstacles: point[];
   isCarPosition: (point: point) => boolean;
 }
 
-const TrackCell = memo(({ x, y, obstacles, isCarPosition }: TrackCellProps) => (
+const TrackCell = memo(({ x, y, isCarPosition }: TrackCellProps) => (
   <div key={y} className="track-cell">
     {hasRock(obstacles, { x, y }) ? <Rock /> : null}
     {isCarPosition({ x, y }) ? <Car color="red" /> : null}

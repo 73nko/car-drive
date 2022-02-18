@@ -63,13 +63,16 @@ export const carIsOnTrack = (carPosition: point) => {
   );
 };
 
-const movements = createMovements();
+const movesList = createMovements();
 
 export async function* generateMovements() {
-  for (let move of movements) {
+  for (let move of movesList) {
     await sleep(1000);
     console.log({ move });
     yield move;
   }
 }
+
 export const gridElements = [...Array(GRID_SIZE)].map((_, i) => i);
+export const obstacles = generateObstacles();
+export const movements = generateMovements();
