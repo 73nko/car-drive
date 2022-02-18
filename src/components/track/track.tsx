@@ -40,16 +40,26 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
       const newCarPosition = { x: carPosition.x, y: carPosition.y };
       switch (direction) {
         case "up":
-          newCarPosition.x = newCarPosition.x - 1;
+          newCarPosition.x =
+            newCarPosition.x - 1 < 0
+              ? gridElements.length - 1
+              : newCarPosition.x - 1;
           break;
         case "down":
-          newCarPosition.x = newCarPosition.x + 1;
+          newCarPosition.x =
+            newCarPosition.x + 1 > gridElements.length - 1
+              ? 0
+              : newCarPosition.x + 1;
           break;
         case "left":
-          newCarPosition.y = newCarPosition.y - 1;
+          newCarPosition.y =
+            newCarPosition.y - 1 < 0 ? 0 : newCarPosition.y - 1;
           break;
         case "right":
-          newCarPosition.y = newCarPosition.y + 1;
+          newCarPosition.y =
+            newCarPosition.y + 1 > gridElements.length - 1
+              ? gridElements.length - 1
+              : newCarPosition.y + 1;
           break;
         default:
           break;

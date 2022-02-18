@@ -7,6 +7,7 @@ export type direction = "up" | "down" | "left" | "right";
 
 const MOVEMENTS = 5;
 export const GRID_SIZE = 50;
+const OBSTACLES = 25;
 
 const sleep = (milliseconds = 1000) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -25,7 +26,7 @@ const createMovements = () => {
   return movements;
 };
 
-export const generateObstacles = (obstacleNumber = 12): point[] => {
+export const generateObstacles = (obstacleNumber = OBSTACLES): point[] => {
   const obstacles: point[] = [];
   for (let i = 0; i < obstacleNumber; i++) {
     obstacles.push({

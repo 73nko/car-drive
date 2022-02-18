@@ -11,8 +11,8 @@ interface CarProps {
 const positionStyle = {
   up: "rotate(270deg)",
   down: "rotate(90deg)",
-  right: "rotate(180deg)",
-  left: "rotate(0deg)",
+  left: "rotate(180deg)",
+  right: "rotate(0deg)",
 };
 
 export function Car(props: CarProps) {
