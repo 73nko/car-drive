@@ -1,0 +1,20 @@
+.track-grid {
+  display: grid;
+  min-height: 100%;
+  width: 100%;
+  grid-template-rows: repeat(50, 1fr);
+}
+
+.track-grid .track-row {
+  display: grid;
+  grid-template-columns: repeat(50, 1fr);
+}
+.track-grid .track-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: hsla(16, 72%, 80%, 0.5);
+
+  border: 1px solid #fff;
+}
