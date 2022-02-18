@@ -7,7 +7,7 @@ import {
   hasRock,
   initializeCarPosition,
   point,
-  GRID_SIZE,
+  gridElements,
 } from "../../utils/utils";
 import { Car } from "../car";
 import { Rock } from "../rock";
@@ -19,11 +19,11 @@ interface TrackProps {
 
 const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
   const obstacles = useMemo(generateObstacles, []);
+  const movements = useMemo(generateMovements, []);
+
   const [carPosition, setCarPosition] = useState<point>(
     initializeCarPosition(carStartPlace, obstacles)
   );
-
-  const movements = useMemo(generateMovements, []);
 
   useEffect(() => {
     const initializeMovements = async () => {
@@ -35,15 +35,6 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
     };
     initializeMovements();
   }, []);
-
-  const isCarPosition = useCallback(
-    (gridPosition: point) => {
-      return (
-        gridPosition.x === carPosition.x && gridPosition.y === carPosition.y
-      );
-    },
-    [carPosition]
-  );
 
   const moveCar = useCallback((direction: direction) => {
     setCarPosition((carPosition: point) => {
@@ -70,6 +61,15 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
     });
   }, []);
 
+  const isCarPosition = useCallback(
+    (gridPosition: point) => {
+      return (
+        gridPosition.x === carPosition.x && gridPosition.y === carPosition.y
+      );
+    },
+    [carPosition]
+  );
+
   return {
     carPosition,
     moveCar,
@@ -80,16 +80,14 @@ const useTrack = (carStartPlace = { x: 0, y: 0 }) => {
 
 const Track = memo(({ carStartPlace }: TrackProps) => {
   const { obstacles, isCarPosition } = useTrack(carStartPlace);
-  const elems = useMemo(() => [...Array(GRID_SIZE)].map((_, i) => i), []);
 
   return (
     <div className="track-grid">
       {[
-        elems.map((x) => (
+        gridElements.map((x) => (
           <TrackRow
             key={x}
             x={x}
-            elems={elems}
             isCarPosition={isCarPosition}
             obstacles={obstacles}
           />
@@ -101,14 +99,13 @@ const Track = memo(({ carStartPlace }: TrackProps) => {
 
 interface TrackRowProps {
   x: number;
-  elems: number[];
   obstacles: point[];
   isCarPosition: (point: point) => boolean;
 }
 
 const TrackRow = memo((props: TrackRowProps) => (
   <div className="track-row">
-    {props.elems.map((y: number) => (
+    {gridElements.map((y: number) => (
       <TrackCell key={y} y={y} {...props} />
     ))}
   </div>
@@ -117,7 +114,6 @@ const TrackRow = memo((props: TrackRowProps) => (
 interface TrackCellProps {
   y: number;
   x: number;
-  elems: number[];
   obstacles: point[];
   isCarPosition: (point: point) => boolean;
 }

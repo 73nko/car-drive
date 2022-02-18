@@ -72,3 +72,4 @@ export async function* generateMovements() {
     yield move;
   }
 }
+export const gridElements = [...Array(GRID_SIZE)].map((_, i) => i);
